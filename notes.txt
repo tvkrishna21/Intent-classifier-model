@@ -1,0 +1,23 @@
+For ingress we need to have a domain registered, as it is dev activity we will use it with work around solution
+
+curl -X POST --resolve <domain name used in ingress>:80:<ingress load balancer ip> http://<application endpoint> -H "Content-Type: application/json" -d '{"input to model"}'
+
+We get the ingress load balancer as below, getent is similar to dig, nslookup...
+~ $ kubectl get ingress -n intent-namespace
+NAME                        CLASS     HOSTS        ADDRESS                                                                   PORTS   AGE
+intent-classifier-ingress   traefik   vamshi.com   aaef309c586ec451fb3fb954acd44060-1569619692.us-east-1.elb.amazonaws.com   80      36m
+~ $ 
+~ $ getent ahosts aaef309c586ec451fb3fb954acd44060-1569619692.us-east-1.elb.amazonaws.com 
+54.152.233.219  STREAM aaef309c586ec451fb3fb954acd44060-1569619692.us-east-1.elb.amazonaws.com
+54.152.233.219  DGRAM  
+54.152.233.219  RAW    
+52.21.244.177   STREAM 
+52.21.244.177   DGRAM  
+52.21.244.177   RAW    
+
+curl -X POST --resolve vamshi.com:80:54.152.233.219 http://vamshi.com/predict -H "Content-Type: application/json" -d '{"text":"I want to cancel my subscription"}'
+this will return {"intent":"complaint"}
+
+
+curl -X POST --resolve vamshi.com:80:54.152.233.219 http://vamshi.com/predict -H "Content-Type: application/json" -d '{"text":"Howz u"}'
+this will return {"intent":"greeting"}

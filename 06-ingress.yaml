@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: <your-domain-or-elb-dns>
+    - host: vamshi.com #any domain name, this domain name is not registered anywhere hence we need to resolve this while accessing using curl command look for notes.txt file
       http:
         paths:
           - path: /predict
